@@ -3,9 +3,24 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const { Pool, Client } = require('pg')
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'olxdb',
+  password: '12345',
+  port: 3211,
+})
+pool.query('SELECT NOW()', (err, res) => {
+  console.log(err, res)
+  pool.end()
+})
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/index')(pool);
+var usersRouter = require('./routes/users')(pool);
+var categoriesRouter = require('./routes/category')(pool);
+var adsRouter = require('./routes/ads')(pool);
+
 
 var app = express();
 
@@ -21,6 +36,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('categories', categoriesRouter);
+app.use('/ads', adsRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
