@@ -1,117 +1,96 @@
 var express = require('express');
 var router = express.Router();
+var path = require('path');
+const helpers = require('../helpers/util')
 
 /* GET home page. */
 module.exports = function (db) {
 
+  router.get('/', helpers.isLoggedIn, function (req, res) {
 
-  router.get('/', isLoggedIn, function (req, res,) {
+    const url = req.url == '/' ? '/categories?page=1&sortBy=id&sortMode=asc' : req.url.replace('/', '/categories')
 
-
-    const url = req.url == "/" ? '/?page=1&sortBy=id&sortMode=asc' : req.url
-  
     const params = []
-  
-    params.push(`userid = ${req.session.user.id}`)
-  
-  
-    if (req.query.task) {
-      params.push(`task like '%${req.query.task}%'`)
+
+    if (req.query.name) {
+      params.push(`name ilike '%${req.query.name}%'`)
     }
-    if (req.query.complete) {
-      params.push(`complete = ${req.query.complete}`)
-    }
-  
+
     const page = req.query.page || 1
     const limit = 3
     const offset = (page - 1) * limit
-    let sql = `select count(*) as total from todo`;
+    let sql = 'select count(*) as total from categories';
     if (params.length > 0) {
       sql += ` where ${params.join(' and ')}`
     }
-    db.get(sql, (err, row) => {
-      const pages = Math.ceil(row.total / limit)
-      sql = "select * from todo"
+    db.query(sql, (err, data) => {
+      const pages = Math.ceil(data.rows[0].total / limit)
+      sql = 'select * from categories'
       if (params.length > 0) {
         sql += ` where ${params.join(' and ')}`
       }
-  req.query.sortMode = req.query.sortMode || "asc";
-  
-  req.query.sortBy = req.query.sortBy || "id";
-  
-  sql += ` order by ${req.query.sortBy} ${req.query.sortMode} `
-      sql += ` limit ? offset ? `
-      db.all(sql, [limit, offset], (err, rows) => {
-        if (err) return res.send(err)
-        res.render('list', { data: rows, 
-          page, 
-          pages, 
-          query: req.query, 
-          url, 
-          user: req.session.user,
-         succesMessage: req.flash('successMessage')
-        });
-      })
-    })
-  })
-  
-  router.get('/add', isLoggedIn, function (req, res) {
-    res.render('add')
-  })
-  
-  router.post('/add', function (req, res) {
-    let task = req.body.task
-    //Quary Binding
-    db.run('insert into todo(task, userid) values (?,?)', [task, req.session.user.id], (err) => {
-      if (err) return res.send(err)
-      console.log(task)
-      res.redirect('/')
-    })
-  })
-  
-  router.get('/delete/:id', isLoggedIn, function (req, res) {
-    const id = req.params.id
-    db.run('delete from todo where id = ?', [Number(id)], (err) => {
-      if (err) return res.send(err)
-      res.redirect('/')
-    })
-  })
-  
-  router.get('/edit/:id', isLoggedIn, function (req, res) {
-    const id = req.params.id
-    db.get('select * from todo where id = ?', [Number(id)], (err, item) => {
-      if (err) return res.send(err)
-      res.render('edit', { data: item })
-    })
-  })
-  
-  router.post('/edit/:id', isLoggedIn, function (req, res) {
-    const id = Number(req.params.id)
-    const task = req.body.task
-    const complete = JSON.parse(req.body.complete)
-    if (!req.files || Object.keys(req.files).length === 0) {
-      db.run('update todo set task = ?, complete = ? where id = ?', [task, complete, id], (err, row) => {
-        if (err) return res.send(err)
-        res.redirect('/')
-      })
-    } else {
-      const file = req.files.picture;
-      const fileName = `${Date.now()}-${file.name}`
-      uploadPath = path.join(__dirname, "..", "public", 'images', fileName)
-  
-      // Use the mv() method to place the file somewhere on your server
-      file.mv(uploadPath, function (err) {
-        if (err)
-          return res.status(500).send(err);
-          console.log(task, complete, fileName, id)
-        db.run('update todo set task = ?, complete = ?, picture = ? where id = ?', [task, complete, fileName, id], (err, row) => {
-          console.log(err)
-          res.redirect('/');
-        })
-      });
-    }
-  })
-  
-  return router
-}
+      req.query.sortMode = req.query.sortMode || 'asc';
 
+      req.query.sortBy = req.query.sortBy || 'id';
+
+      sql += ` order by ${req.query.sortBy} ${req.query.sortMode}`
+
+      sql += ' limit $1 offset $2'
+      db.query(sql, [limit, offset], (err, data) => {
+        if (err) return res.send(err)
+        res.render('admin/categories/list', {
+          data: data.rows,
+          page,
+          pages,
+          query: req.query, url,
+          user: req.session.user,
+          successMessage: req.flash('successMessage')
+        })
+      })
+    })
+  })
+
+  router.get('/add', helpers.isLoggedIn, function (req, res) {
+    res.render('admin/categories/form', {
+      user: req.session.user,
+      data: {}
+    })
+  })
+
+  router.post('/add', function (req, res) {
+    db.query('insert into categories(name) values ($1)', [req.body.name], (err) => {
+      if (err) return res.send(err)
+      res.redirect('/categories')
+    });
+
+  })
+
+  router.get('/delete/:id', helpers.isLoggedIn, function (req, res) {
+    const id = Number(req.params.id)
+    db.query('delete from categories where id = $1', [id], (err) => {
+      if (err) return res.send(err)
+      req.flash('successMessage', `ID : ${id} berhasil dihapus`)
+      res.redirect('/categories')
+    });
+  })
+
+  router.get('/edit/:id', helpers.isLoggedIn, function (req, res) {
+    db.query('select * from categories where id = $1', [Number(req.params.id)], (err, item) => {
+      if (err) return res.send(err)
+      res.render('admin/categories/form', {
+        user: req.session.user,
+        data: item.rows[0]
+      })
+    })
+  })
+
+  router.post('/edit/:id', helpers.isLoggedIn, function (req, res) {
+    const id = Number(req.params.id)
+    db.query('update categories set name = $1 where id = $2', [req.body.name, id], (err) => {
+      if (err) return res.send(err)
+      res.redirect('/categories')
+    });
+  })
+
+  return router;
+}
