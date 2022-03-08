@@ -13,7 +13,7 @@ const pool = new Pool({
   host: 'localhost',
   database: 'olxdb',
   password: '12345',
-  port: 3211,
+  port: 5432,
 })
 
 var indexRouter = require('./routes/index')(pool);
