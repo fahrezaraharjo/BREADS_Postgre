@@ -16,7 +16,7 @@ module.exports = function (db) {
 
   router.post('/login', function (req, res) {
     const email = req.body.email
-    const password = req.body.password
+    const password = req.body.password 
 
     db.query('select * from users where email = $1', [email], (err, user) => {
       if (err) {
@@ -30,6 +30,7 @@ module.exports = function (db) {
       bcrypt.compare(password, user.rows[0].pass, function (err, result) {
         if (result) {
           req.session.user = user.rows[0]
+          console.log(user.rows)
           if (user.rows[0].isadmin) {
             res.redirect('/ads')
           } else {
@@ -58,6 +59,7 @@ module.exports = function (db) {
         if (err) return res.send('register gagal')
         res.redirect('/login')
       })
+      console.log(err)
     })
   })
 
