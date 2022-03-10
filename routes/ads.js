@@ -83,7 +83,7 @@ module.exports = function (db) {
     })
   })
 
-  router.post('/add', function (req, res) {
+  router.post('/add', helpers.isLoggedIn, function (req, res) {
     if (!req.files || Object.keys(req.files).length === 0) {
       db.query('insert into ads(title, description, category, seller, price, approved, pictures) values ($1, $2, $3, $4, $5, $6, $7)', [req.body.title, req.body.description, Number(req.body.category), Number(req.body.seller), Number(req.body.price), JSON.parse(req.body.approved), []], (err) => {
         if (err) {
@@ -218,6 +218,54 @@ module.exports = function (db) {
         });
       }
     }
+  })
+
+  router.get('/data/:id', function (req, res) {
+    const id = Number(req.params.id)
+    db.query('select * from ads where id = $1', [id], (err, data) => {
+      if (err) return res.json({ err: err })
+      if (data.rows.length == 0) return res.json({ err: "data tidak ditemukan" })
+      res.json(data.rows[0])
+    });
+  })
+
+  router.post('/data/:id', function (req, res) {
+    const id = Number(req.params.id)
+    db.query('update ads set title = $1, description = $2, price = $3 where id = $4 returning *', [req.body.title, req.body.description, Number(req.body.price), id], (err, data) => {
+      if (err) return res.json({ err: err })
+      res.json(data.rows)
+    });
+  })
+
+  router.get('/data', function (req, res) {
+
+    console.log(req.query)
+
+    const params = []
+
+    if (req.query.search.value) {
+      params.push(`title ilike '%${req.query.search.value}%'`)
+      params.push(`description ilike '%${req.query.search.value}%'`)
+    }
+
+    db.query(`select count(*) as total from ads${params.length > 0 ? ` where ${params.join(' or ')}` : ''}`, (err, data) => {
+      const total = data.rows[0].total
+      const offset = req.query.start
+      const limit = req.query.length
+      const sortBy = req.query.columns[req.query.order[0].column].data
+      const sortMode = req.query.order[0].dir
+
+      db.query(`select * from ads${params.length > 0 ? ` where ${params.join(' or ')}` : ''} order by ${sortBy} ${sortMode} limit ${limit} offset ${offset}`, (err, data) => {
+        if (err) return res.json({ err: err })
+        res.json({
+          "draw": Number(req.query.draw),
+          "recordsTotal": total,
+          "recordsFiltered": total,
+          "data": data.rows
+        })
+      });
+
+    })
   })
 
   return router;

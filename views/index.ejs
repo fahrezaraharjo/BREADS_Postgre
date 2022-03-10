@@ -3,10 +3,12 @@
 
 <head>
   <title>
-    <%= title %>
+    OLX
   </title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <link rel='stylesheet' href='/stylesheets/carousel.css' />
+  <link href="/fontawesome/css/all.css" rel="stylesheet">
+
   <style>
     .container {
       margin: 0;
@@ -34,14 +36,15 @@
       margin-top: 100px;
       margin-bottom: 50px;
       border-radius: 10px;
-      
+
     }
+
     .carousel img {
       border: 5px solid rgba(2, 10, 10, 0.534);
       object-fit: cover;
       border-radius: 5px;
     }
-    
+
 
     .ads {
       display: flex;
@@ -51,9 +54,11 @@
       justify-content: space-around;
       padding: 0px 50px 50px;
     }
-    .ads a:hover{
+
+    .ads a:hover {
       background-color: #c4c5c5;
     }
+
     .item-ads {
       padding: 10px;
       width: 200px;
@@ -63,27 +68,32 @@
       align-items: center;
       background-color: rgba(71, 71, 70, 0.836);
     }
-    .item-ads a :hover{
-      
+
+    .item-ads a :hover {
+
       background-color: rgba(14, 14, 11, 0.836);
     }
-    
+
 
     .item-ads img {
       width: 180px;
       height: 135px;
       object-fit: cover;
       border-radius: 5px;
-      
+      transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+
     }
-    .item-ads img a :hover{
+
+    .item-ads img a :hover {
       color: #353636;
-      
+
     }
+
     .item-ads h2 {
       margin-top: 50px;
       font-size: 20px;
     }
+
     .item-ads p {
       font-size: 15px;
       color: rgb(235, 241, 205);
@@ -96,9 +106,10 @@
       align-items: center;
       gap: 10px;
     }
+
     .active {
-  background-color: #070808;
-}
+      background-color: #070808;
+    }
   </style>
 </head>
 
@@ -112,37 +123,48 @@
           </path>
         </svg>
       </a>
-      <form class="form-inline">
-        <select name="" id="">
-          <option value="all" >Category</option>
-
-
+      <form class="form-inline" action="" method="get">
+        <select name="category">
+          <option value="">Semua</option>
+          <% categories.forEach(item=> { %>
+            <option value="<%= item.id %>" <%=query.category==item.id ? ' selected' : '' %>><%= item.name %>
+            </option>
+            <% }) %>
         </select>
         <input type="text">
+        <input type="text" name="keyword" value="<%= query.keyword %>">
+        <button type="submit" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
       </form>
-
-      <a href="<%= user ? '/profile' : '/login' %>"><%= user ? user.fullname : 'login' %></a>
-      <a class="btn" href="">jual</a>
+      <a href="<%= user ? '/profile' : '/login' %>">
+        <%= user ? user.fullname : 'login' %>
+      </a>
+      <a class="btn" href="/sell">jual</a>
     </div>
     <div class="carousel">
       <div class="slideshow-container">
 
         <div class="mySlides fade">
+          <a href="/images/disc.jpg" class="href">
           <div class="numbertext">1 / 3</div>
           <img src="/images/disc.jpg" style="width:100%">
           <div class="text">~we could~</div>
+        </a>
         </div>
 
         <div class="mySlides fade">
+          <a href="https://dynamic.zacdn.com/VVb7-Wwxseiwbvkk8aC4YItNCE8=/fit-in/x/filters:quality(80):fill(ffffff)/https://static-id.zacdn.com/cms/cw10/996x500_HERO__(1).jpg">
           <div class="numbertext">2 / 3</div>
           <img src="/images/disc2.jpg" style="width:100%">
           <div class="text">~share love~</div>
+          </a>
         </div>
 
         <div class="mySlides fade">
+          <a href="https://dynamic.zacdn.com/qRNLA4rmW2PWlSw1xI5dhCaKGDA=/fit-in/x/filters:quality(80):fill(ffffff)/https://static-id.zacdn.com/cms/cw10/996x500_hero_SHOPINMAR.jpg">
           <div class="numbertext">3 / 3</div>
           <img src="/images/disc3.jpg" style="width:100%">
           <div class="text">~To everyone~</div>
+        </a>
         </div>
 
         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
@@ -157,42 +179,22 @@
       </div>
     </div>
     <div class="ads">
-      <div class="item-ads">
-        <a class="active" href="/images/download.jpeg">
-        <img src="/images/download.jpeg" alt="">
-      </a>
-        <h2>Rp. 900.000</h2>
-        <p>Batik keren</p>
-      </div>
-      <div class="item-ads">
-        <img src="/images/download (2).jpeg" alt="">
-        <h2>Rp. 4.900.000</h2>
-        <p>Tuxedo suit</p>
-      </div>
-      <div class="item-ads">
-        <a target="_blank" href="/images/download (1).jpeg">
-        <img src="/images/download (1).jpeg" alt="">
-      </a>  
-        <h2>Rp. 1.900.000</h2>
-        <p>Batik with Dragon motiv</p>
+      <a href="" class="href"></a>
+      <% data.forEach(item=> { %>
+        <div class="item-ads">
+          <img src="/images/ads/<%= item.pictures[0] %>" alt="">
 
-      </div>
-      <div class="item-ads">
-        <img src="/images/0085015250_2_1_1.jpg" alt="">
-        <h2>Rp. 499.000</h2>
-        <p>T-shirt</p>
-      </div>
-      <div class="item-ads"></div>
-      <div class="item-ads"></div>
-      <div class="item-ads"></div>
-      <div class="item-ads"></div>
-      <div class="item-ads"></div>
-      <div class="item-ads"></div>
-      <div class="item-ads"></div>
+          <%= console.log(item.pictures[0]) %>
+            <h2>
+              <%= item.price %>
+            </h2>
+            <p>
+              <%= item.title %>
+            </p>
+        </div>
+        <% }) %>
     </div>
-
   </div>
-
   <script>
     var slideIndex = 1;
     showSlides(slideIndex);

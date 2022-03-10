@@ -60,6 +60,7 @@ module.exports = function (db) {
   router.post('/add', function (req, res) {
     db.query('insert into categories(name) values ($1)', [req.body.name], (err) => {
       if (err) return res.send(err)
+      req.flash('successMessage', `ID :  berhasil ditambahkan`)
       res.redirect('/categories')
     });
 
@@ -69,7 +70,7 @@ module.exports = function (db) {
     const id = Number(req.params.id)
     db.query('delete from categories where id = $1', [id], (err) => {
       if (err) return res.send(err)
-      req.flash('successMessage', `ID : ${id} berhasil dihapus`)
+      req.flash('successMessage', `ID : ${id} berhasil hapus`)
       res.redirect('/categories')
     });
   })
