@@ -44,7 +44,8 @@ module.exports = function (db) {
           pages,
           query: req.query, url,
           user: req.session.user,
-          successMessage: req.flash('successMessage')
+          successMessage: req.flash('successMessage'),
+          path: req.originalUrl
         })
       })
     })
@@ -53,14 +54,14 @@ module.exports = function (db) {
   router.get('/add', helpers.isLoggedIn, function (req, res) {
     res.render('admin/categories/form', {
       user: req.session.user,
-      data: {}
+      data: {},
+      path: req.originalUrl
     })
   })
 
   router.post('/add', function (req, res) {
     db.query('insert into categories(name) values ($1)', [req.body.name], (err) => {
       if (err) return res.send(err)
-      req.flash('successMessage', `ID :  berhasil ditambahkan`)
       res.redirect('/categories')
     });
 
@@ -70,7 +71,7 @@ module.exports = function (db) {
     const id = Number(req.params.id)
     db.query('delete from categories where id = $1', [id], (err) => {
       if (err) return res.send(err)
-      req.flash('successMessage', `ID : ${id} berhasil hapus`)
+      req.flash('successMessage', `ID : ${id} berhasil dihapus`)
       res.redirect('/categories')
     });
   })
@@ -80,7 +81,8 @@ module.exports = function (db) {
       if (err) return res.send(err)
       res.render('admin/categories/form', {
         user: req.session.user,
-        data: item.rows[0]
+        data: item.rows[0],
+        path: req.originalUrl
       })
     })
   })

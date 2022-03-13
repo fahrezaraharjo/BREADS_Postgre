@@ -21,6 +21,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal-body .my-modal {
             width: 80%;
         }
@@ -32,8 +33,11 @@
         <div class="card">
             <form action="" method="post" encType="multipart/form-data">
                 <div class="card-header">
-                    <h1>Your Profile</h1>
-                    <a href="/login"><button type="button" class="btn btn-warning tombol-close">logout</button></a>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h1>Your Profile</h1>
+                        <a href="/logout" class="btn btn-danger">Keluar</a>
+                    </div>
+                    
                 </div>
                 <div class="card-body">
                     <div class="mb-3 row">
@@ -153,21 +157,22 @@
                         data: "pictures",
                         orderable: false,
                         render: function (data, type) {
-                            
                             return `<img src="/images/ads/${data[0]}" alt="gambar produk" width="100" />`
-                            
                         }
                     },
                     {
                         data: "id",
                         orderable: false,
                         render: function (data, type) {
-                            return `<button type="button" dataid="${data}" class="btn btn-success btn-edit"><i class="fa-solid fa-pencil"></i></button>`
+                            return `
+                            <button type="button" dataid="${data}" class="btn btn-success btn-edit"><i class="fa-solid fa-pencil"></i></button>
+                            <button type="button" dataid="${data}" class="btn btn-danger btn-delete"><i class="fa-solid fa-trash"></i></button>
+                            `
                         }
-                        
                     }
                 ]
             });
+
             $('#example').on('click', '.btn-edit', function () {
                 const id = $(this).attr('dataid')
                 $.get(`/ads/data/${id}`, function (data) {
@@ -175,18 +180,38 @@
                     $('#title').val(data.title)
                     $('#description').val(data.description)
                     $('#price').val(data.price)
+
                     $('.modal-body').css('display', 'flex')
                 })
             })
+
+            $('#example').on('click', '.btn-delete', function () {
+                const id = $(this).attr('dataid')
+
+                $.ajax({
+                    url: `/ads/data/${id}`,
+                    method: "DELETE",
+                    dataType: "json"
+                }).done(function (data) {
+                    console.log(data)
+                    table.ajax.reload();
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+                
+            })
+
             $('.tombol-close').click(function () {
                 $('.modal-body').css('display', 'none')
             })
+
             $('#form-edit').submit(function (e) {
                 e.preventDefault()
                 const id = $('#id').val()
                 const title = $('#title').val()
                 const description = $('#description').val()
                 const price = $('#price').val()
+
                 $.post(`/ads/data/${id}`, { title, description, price }, function (data) {
                     table.ajax.reload();
                     $('.modal-body').css('display', 'none')
