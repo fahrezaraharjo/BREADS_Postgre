@@ -61,8 +61,10 @@
 
             <div style="text-align:center">
                 <% item.pictures.forEach((picture, index)=> {%>
+                    <%= console.log(picture) %>
                     <%- `<span class="dot" onclick="currentSlide(${index + 1})"></span>` %>
                         <% }) %>
+
             </div>
         </div>
         <h2 style="margin-left: 20px;"><%= formatter.format(item.price) %></h2>
