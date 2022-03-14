@@ -168,8 +168,8 @@
         <input type="text" name="keyword" value="<%= query.keyword %>">
         <button type="submit" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
       </form>
-      <a href="<%= user ? '/profile' : '/login' %>">
-        <%= user ? user.fullname : 'login' %>
+      <a href="<%= user ? '/profile' : '/login' %>"><h2 text-decoration="none;">
+        <%= user ? user.fullname : 'login' %></h2>
       </a>
       <a class="btn" href="/sell">jual</a>
     </div>
@@ -278,8 +278,8 @@
       <ul id="homeSocialFooter" class="zds-body-s">
         <li> <a href="https://www.tiktok.com/@fahrezarj0" target="_blank" id="" class=""><i
               class="fa-brands fa-tiktok"></i></a> </li>
-        <li> <a href="https://www.instagram.com/adeliachoirunnisa/" target="_blank" id="" class="">INSTAGRAM</a> </li>
-        <li> <a href="https://www.facebook.com/Zara" target="_blank" id="" class="">FACEBOOK</a> </li>
+        <li> <a href="https://www.instagram.com/adeliachoirunnisa/" target="_blank" id="" class=""><i class="fa-brands fa-instagram"></i></a> </li>
+        <li> <a href="https://www.facebook.com/Zara" target="_blank" id="" class=""><i class="fa-brands fa-facebook"></i></a> </li>
 
         <li> <a href="https://twitter.com/ZARA" target="_blank" id="" class="">TWITTER</a> </li>
 
@@ -305,7 +305,7 @@
     })
     var page = 1;
     $(window).scroll(function () {
-      if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+      if ($(window).scrollTop() == $(document).height() - $(window).height()) { //sakabehna tengarti sampe bawah timana ieu teh
         page++
         $.ajax({
           url: `/`,
