@@ -37,8 +37,10 @@ module.exports = function (db) {
     const offset = (page - 1) * limit
     let sql = 'select count(*) as total from ads';
     if (params.length > 0) {
+      console.log(params)
       sql += ` where ${params.join(' and ')}`
     }
+
     db.query(sql, (err, data) => {
       const pages = Math.ceil(data.rows[0].total / limit)
       sql = 'select * from ads'

@@ -45,3 +45,148 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 a {
   color: inherit;
 }
+.container {
+  margin: 0;
+  padding: 0;
+  /* background-color: rgba(199, 235, 170, 0.863); */
+}
+
+.header {
+  background-color: rgba(247, 247, 247, 0.4);
+  display: flex;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-around;
+  z-index: 1;
+
+}
+
+.home-page__newsletter {
+  font-size: var(--font-size-heading-m);
+  line-height: var(--line-height-heading-m);
+  letter-spacing: var(--letter-spacing-heading-m);
+  text-transform: uppercase;
+  font-stretch: var(--font-stretch-condensed);
+  font-weight: var(--font-weight-light);
+}
+
+.home-footer__newsletter {
+  margin-top: var(--grid-spacing-05);
+}
+
+.span {
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+.carousel {
+  margin-top: 100px;
+  margin-bottom: 50px;
+  border-radius: 10px;
+
+}
+
+.carousel img {
+  border: 5px solid rgba(2, 10, 10, 0.534);
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+[dir] .home-footer__social-network {
+  margin-bottom: 70px;
+}
+
+.ads {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-around;
+  padding: 0px 50px 50px;
+}
+
+.ads a:hover {
+  background-color: #c4c5c5;
+}
+
+.item-ads {
+  padding: 10px;
+  width: 326px;
+  /* border: 1px solid rgb(15, 15, 15); */
+  border-radius: 10px;
+  align-items: center;
+  background-color: #ffffff;
+  height: 538px;
+}
+
+.item-ads a :hover {
+
+  background-color: #ffffff;
+}
+
+
+.item-ads img {
+  width: 300px;
+  height: 450px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.item-ads img a :hover {
+  color: #353636;
+
+}
+
+.item-ads h2 {
+  margin-top: 10px;
+  font-size: 20px;
+
+}
+
+.item-ads p {
+  font-size: 30px;
+  color: rgb(12 12 12);
+  max-width: 100px;
+  margin-top: auto;
+
+}
+
+.form-inline {
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider-spot {
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  width: 100vw;
+}
+
+der-spot__universes {
+  display: flex;
+  height: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+ol,
+ul {
+  list-style: none;
+}
