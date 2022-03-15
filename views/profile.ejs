@@ -144,10 +144,10 @@
     <script>
         $(document).ready(function () {
             const table = $('#example').DataTable({
-                "lengthMenu": [[1, 2, 3, -1], [1, 2, 3, "All"]],
+                "lengthMenu": [[1, 2, 3, -1], [1, 2, 3, "All"]],//ini apa
                 "processing": true,
                 "serverSide": true,
-                "ajax": "/ads/data",
+                "ajax": "/ads/data",// ini
                 "columns": [
                     { data: "title" },
                     { data: "price" },
@@ -172,7 +172,7 @@
                 ]
             });
             $('#example').on('click', '.btn-edit', function () {
-                const id = $(this).attr('dataid')
+                const id = $(this).attr('dataid')//ini this apa
                 $.get(`/ads/data/${id}`, function (data) {
                     $('#id').val(data.id)
                     $('#title').val(data.title)

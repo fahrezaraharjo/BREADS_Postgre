@@ -28,6 +28,10 @@ module.exports = function (db) {
       params.push(`category = ${req.query.category}`)
     }
 
+    if (req.query.seller) {
+      params.push(`seller = ${req.query.seller}`)
+    }
+
     const page = req.query.page || 1
     const limit = 3
     const offset = (page - 1) * limit
@@ -44,6 +48,8 @@ module.exports = function (db) {
       req.query.sortMode = req.query.sortMode || 'asc';
 
       req.query.sortBy = req.query.sortBy || 'id';
+
+
 
       sql += ` order by ${req.query.sortBy} ${req.query.sortMode}`
 
