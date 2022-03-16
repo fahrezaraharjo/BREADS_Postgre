@@ -24,7 +24,7 @@ module.exports = function (db) {
     }
 
     const page = req.query.page || 1
-    const limit = 8
+    const limit = 6
     const offset = (page - 1) * limit
     let sql = 'select count(*) as total from ads';
     if (params.length > 0) {
